@@ -4,7 +4,7 @@ import { Button, StyleSheet, Text, View } from 'react-native';
 export default function Cronometro() {
   const [tempo, setTempo] = useState(0);
   const [ativo, setAtivo] = useState(false);
-  const intervalo = useRef<ReturnType<typeof setInterval> | null>(null);
+  const intervalo = useRef<number | null>(null);
 
   const iniciar = () => {
     if (!ativo) {
@@ -29,7 +29,7 @@ export default function Cronometro() {
   };
 
   const formatar = (segundos: number) => {
-    const min = String(Math.floor(segundos / 60)).padStart(3, '0');
+    const min = String(Math.floor(segundos / 60)).padStart(2, '0');
     const sec = String(segundos % 60).padStart(2, '0');
     return `${min}:${sec}`;
   };
