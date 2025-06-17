@@ -19,7 +19,7 @@ export default function Alarmes() {
   const [alarmes, setAlarmes] = useState<Alarme[]>([]);
 
   // 🔁 Coloque aqui o link gerado pelo seu ngrok
-  const API_URL = 'https://855b-2804-14d-4487-10dc-455b-f937-be30-76c4.ngrok-free.app';
+  const API_URL = 'https://0048-2804-14d-4487-10dc-455b-f937-be30-76c4.ngrok-free.app';
 
   // Carrega alarmes do backend
   const carregarAlarmes = async () => {
