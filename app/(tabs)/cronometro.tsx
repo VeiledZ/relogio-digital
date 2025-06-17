@@ -2,16 +2,16 @@ import React, { useRef, useState } from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
 
 export default function Cronometro() {
-  const [tempo, setTempo] = useState(0);
+  const [tempo, setTempo] = useState(0); // tempo em milissegundos
   const [ativo, setAtivo] = useState(false);
-  const intervalo = useRef<number | null>(null);
+  const intervalo = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const iniciar = () => {
     if (!ativo) {
       setAtivo(true);
       intervalo.current = setInterval(() => {
-        setTempo((t) => t + 1);
-      }, 1000);
+        setTempo((t) => t + 10); // aumenta 10ms
+      }, 10);
     }
   };
 
@@ -28,10 +28,12 @@ export default function Cronometro() {
     setTempo(0);
   };
 
-  const formatar = (segundos: number) => {
-    const min = String(Math.floor(segundos / 60)).padStart(2, '0');
-    const sec = String(segundos % 60).padStart(2, '0');
-    return `${min}:${sec}`;
+  const formatar = (ms: number) => {
+    const horas = String(Math.floor(ms / 3600000)).padStart(2, '0');
+    const minutos = String(Math.floor(ms / 60000)).padStart(2, '0');
+    const segundos = String(Math.floor((ms % 60000) / 1000)).padStart(2, '0');
+    const milesimos = String(ms % 1000).padStart(2, '0');
+    return `${horas}:${minutos}:${segundos}:${milesimos}`;
   };
 
   return (
@@ -54,7 +56,7 @@ const styles = StyleSheet.create({
     gap: 30,
   },
   tempo: {
-    fontSize: 60,
+    fontSize: 70,
     color: '#fff',
     fontWeight: 'bold',
   },

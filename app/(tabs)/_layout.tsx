@@ -52,10 +52,22 @@ export default function TabLayout() {
         options={{
           title: 'Cronômetro',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="stopwatch.fill" color={color} />
-    ,
-  }}
-/>
-
+        }}
+     />
+      <Tabs.Screen
+        name="timer"
+        options={{
+          title: 'Timer',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="timer" color={color} />,
+        }}
+      /> 
+      <Tabs.Screen
+        name="alarmes"
+        options={{
+          title: 'Alarmes',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="alarm.fill" color={color} />,
+        }}
+      />
     </Tabs>
   );
 }
