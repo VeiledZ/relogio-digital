@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   },
   relogio: {
     fontSize: 70,
-    color: '#00ffcc',
+    color: '#6edd24',
     fontWeight: 'bold',
   },
 });
