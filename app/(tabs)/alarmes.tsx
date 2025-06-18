@@ -7,7 +7,9 @@ import {
   StyleSheet,
   FlatList,
   Alert,
+  Platform,
 } from 'react-native';
+import * as Notifications from 'expo-notifications';
 
 type Alarme = {
   id: number;
@@ -18,8 +20,11 @@ export default function Alarmes() {
   const [horario, setHorario] = useState('');
   const [alarmes, setAlarmes] = useState<Alarme[]>([]);
 
-  // 🔁 Coloque aqui o link gerado pelo seu ngrok
-  const API_URL = 'https://0048-2804-14d-4487-10dc-455b-f937-be30-76c4.ngrok-free.app';
+  const API_URL = 'https://seu-app.onrender.com'; // ajuste para sua URL
+
+  useEffect(() => {
+    carregarAlarmes();
+  }, []);
 
   // Carrega alarmes do backend
   const carregarAlarmes = async () => {
@@ -32,16 +37,43 @@ export default function Alarmes() {
     }
   };
 
+  // Agendar notificação local
+  async function scheduleAlarmNotification(horario: string) {
+    const [hour, minute] = horario.split(':').map(Number);
+    const now = new Date();
+    const triggerDate = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      hour,
+      minute,
+      0
+    );
+    if (triggerDate <= now) {
+      triggerDate.setDate(triggerDate.getDate() + 1);
+    }
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: '🔔 Alarme',
+        body: `Hora marcada: ${horario}`,
+      },
+      trigger: triggerDate,
+    });
+  }
+
   // Adiciona um novo alarme
   const adicionarAlarme = async () => {
     if (!horario.trim()) return;
 
     try {
-      await fetch(`${API_URL}/alarmes`, {
+      const res = await fetch(`${API_URL}/alarmes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ horario }),
       });
+
+      const novo = await res.json();
+      await scheduleAlarmNotification(novo.horario);
 
       setHorario('');
       carregarAlarmes();
@@ -59,11 +91,6 @@ export default function Alarmes() {
       Alert.alert('Erro ao remover alarme');
     }
   };
-
-  // Carrega a lista ao abrir a aba
-  useEffect(() => {
-    carregarAlarmes();
-  }, []);
 
   return (
     <View style={styles.container}>
@@ -88,7 +115,9 @@ export default function Alarmes() {
             <Button title="Excluir" onPress={() => removerAlarme(item.id)} />
           </View>
         )}
-        ListEmptyComponent={<Text style={{ color: '#999' }}>Nenhum alarme cadastrado.</Text>}
+        ListEmptyComponent={
+          <Text style={{ color: '#999' }}>Nenhum alarme cadastrado.</Text>
+        }
         contentContainerStyle={{ paddingTop: 20 }}
       />
     </View>
